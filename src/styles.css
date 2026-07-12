@@ -1,0 +1,73 @@
+/* =====================================================================
+   Jira Due Board — design tokens
+   ทิศทาง: "ops console" จอเข้มแบบแผงควบคุม สีคือข้อมูล (urgency)
+   ===================================================================== */
+:root {
+  --ink:      #0d1320;
+  --panel:    #151d2e;
+  --panel-2:  #1b2438;
+  --line:     #283449;
+  --text:     #e7edf7;
+  --muted:    #8094b3;
+  --muted-2:  #5d6f8f;
+
+  /* urgency scale — ความเร่งด่วนคือสาระของหน้านี้ */
+  --overdue:   #ff5d73;
+  --today:     #ff9f45;
+  --soon:      #ffd23f;
+  --upcoming:  #4cc9b0;
+
+  --brand:    #7aa2ff;   /* accent — interactive only (links/buttons/focus), never a status */
+
+  /* ── semantic status contract (ball-ownership §14) — 6 สี map 1:1 กับกลุ่ม ──
+     ใช้เฉพาะสื่อ "สเตจ/ลูกอยู่ที่ใคร" เท่านั้น ห้ามใช้ตกแต่งที่อื่น
+     waiting_user สว่างสุด (จุดเจ็บของทีม), neutral/done จมสุด               */
+  --st-active:       #57c98a;   /* dev ทำอยู่            */
+  --st-tester:       #2fc4c4;   /* รอ tester            */
+  --st-user:         #ffb43d;   /* รอ user ← เด่นสุด     */
+  --st-senior:       #b18cf0;   /* รอ senior           */
+  --st-rework:       #f0736f;   /* แก้กลับ              */
+  --st-neutral:      #8394b0;   /* done / in-transit / อื่น ๆ (จมสุด) */
+
+  --radius:   14px;
+  --radius-sm: 9px;
+  --radius-xs: 6px;
+
+  /* spacing scale (4px base) */
+  --sp-1: 4px; --sp-2: 8px; --sp-3: 12px; --sp-4: 16px; --sp-5: 24px; --sp-6: 32px;
+
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+  /* Thai-first body: IBM Plex Sans Thai Looped — ห่วงปลายอักษรช่วยแยก ก/ถ/ภ ตอนสแกนเร็ว */
+  --font-body:    'IBM Plex Sans Thai Looped', 'Noto Sans Thai', system-ui, sans-serif;
+  --font-mono:    'JetBrains Mono', ui-monospace, monospace;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background:
+    radial-gradient(1200px 600px at 80% -10%, rgba(122, 162, 255, 0.08), transparent 60%),
+    var(--ink);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 15px;           /* Thai body ≥ 15px */
+  line-height: 1.75;         /* วรรณยุกต์/สระไทยต้องการช่องหายใจ */
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ตัวเลข/รหัสในตาราง: tabular + ชิดขวา อ่านเทียบง่าย */
+.mono, .num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+::selection { background: rgba(122, 162, 255, 0.3); }
+
+/* scrollbar ให้เข้ากับธีมเข้ม */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--line); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--muted-2); }
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+}
