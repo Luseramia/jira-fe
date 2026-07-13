@@ -3,8 +3,8 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Comment, Issue, Summary, WeeklyReport } from './models';
 
-// ปรับ URL ตรงนี้ถ้า deploy แยกโดเมน
-const API = 'http://localhost:3000/api';
+// relative path — dev ใช้ proxy.conf.json, prod ให้ nginx proxy /api ไป backend
+const API = '/api';
 
 @Injectable({ providedIn: 'root' })
 export class IssuesService {

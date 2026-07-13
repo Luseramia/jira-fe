@@ -10,8 +10,8 @@ import {
   WorkloadGroup,
 } from './models';
 
-// ปรับ URL ตรงนี้ถ้า deploy แยกโดเมน (เหมือน issues.service.ts)
-const API = 'http://localhost:3000/api';
+// relative path — dev ใช้ proxy.conf.json, prod ให้ nginx proxy /api ไป backend (เหมือน issues.service.ts)
+const API = '/api';
 
 @Injectable({ providedIn: 'root' })
 export class TicketsService {
