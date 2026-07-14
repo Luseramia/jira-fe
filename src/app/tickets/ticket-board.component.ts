@@ -5,6 +5,7 @@ import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { TicketFilters, TicketListResponse, TicketPreset, TicketQuery, TicketRow } from '../models';
 import { TicketsService } from '../tickets.service';
+import { FollowupBadgeComponent } from './followup-badge.component';
 import { StageStripComponent } from './stage-strip.component';
 import { TicketDrawerComponent } from './ticket-drawer.component';
 
@@ -17,7 +18,7 @@ interface AppliedChip {
 @Component({
   selector: 'app-ticket-board',
   standalone: true,
-  imports: [CommonModule, FormsModule, TicketDrawerComponent, StageStripComponent],
+  imports: [CommonModule, FormsModule, TicketDrawerComponent, StageStripComponent, FollowupBadgeComponent],
   template: `
     <header class="masthead">
       <div class="brand">
@@ -137,6 +138,7 @@ interface AppliedChip {
               <td class="c-title"><span class="title" [title]="t.title || ''">{{ t.title || '—' }}</span></td>
               <td class="c-stage">
                 <app-stage-strip *ngIf="t.jiraKey; else noCard" [status]="t.jiraStatus"></app-stage-strip>
+                <app-followup-badge [followup]="t.followup" [status]="t.jiraStatus"></app-followup-badge>
                 <ng-template #noCard><span class="nocard">ยังไม่เปิดการ์ด</span></ng-template>
                 <span class="more mono" *ngIf="t.jiraCount > 1" [title]="t.jiraCount + ' การ์ด'">+{{ t.jiraCount - 1 }}</span>
               </td>
@@ -211,6 +213,8 @@ interface AppliedChip {
       .c-title .title { max-width: 320px; }
       .c-dept, .c-req { color: var(--muted); max-width: 150px; }
       .c-stage { min-width: 170px; white-space: nowrap; }
+      /* strip + badge ติดตามเมลเรียงลงมาในเซลล์เดียว */
+      .c-stage app-followup-badge { display: block; margin-top: 4px; }
       .more { font-size: 11px; color: var(--muted); margin-left: 6px; vertical-align: top; }
       .nocard { font-size: 13px; color: var(--muted-2); }
 

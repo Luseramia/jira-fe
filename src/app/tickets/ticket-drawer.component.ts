@@ -3,13 +3,14 @@ import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from
 import { FormsModule } from '@angular/forms';
 import { LinkedIssue, TicketDetail } from '../models';
 import { TicketsService } from '../tickets.service';
+import { FollowupBadgeComponent } from './followup-badge.component';
 import { StageStripComponent } from './stage-strip.component';
 import { stageMeta } from './status-chip';
 
 @Component({
   selector: 'app-ticket-drawer',
   standalone: true,
-  imports: [CommonModule, FormsModule, StageStripComponent],
+  imports: [CommonModule, FormsModule, StageStripComponent, FollowupBadgeComponent],
   template: `
     <div class="scrim" [class.show]="!!ticketNumber" (click)="closed.emit()"></div>
 
@@ -69,6 +70,7 @@ import { stageMeta } from './status-chip';
 
               <!-- full Stage Strip: อยู่สเตจไหน ใครถือ ค้างกี่วัน -->
               <app-stage-strip mode="full" [status]="iss.status" [days]="currentStageDays(iss)"></app-stage-strip>
+              <app-followup-badge class="fb-slot" [followup]="detail.followup" [status]="iss.status"></app-followup-badge>
 
               <div class="jmeta">
                 <span *ngIf="iss.assignee">ผู้รับผิดชอบ: <b>{{ iss.assignee }}</b></span>
@@ -140,6 +142,8 @@ import { stageMeta } from './status-chip';
       .unlink { margin-left: auto; background: transparent; border: 1px solid var(--line); color: var(--muted); border-radius: var(--radius-xs); cursor: pointer; font-size: 12px; padding: 4px 10px; font-family: var(--font-body); }
       .unlink:hover { color: var(--st-rework); border-color: var(--st-rework); }
 
+      .fb-slot { display: block; margin-top: 8px; }
+      .fb-slot:empty { display: none; }
       .jmeta { font-size: 14px; color: var(--muted); margin: 13px 0 6px; }
       .jmeta b { color: var(--text); font-weight: 600; }
       .jmeta .muted { color: var(--muted-2); }

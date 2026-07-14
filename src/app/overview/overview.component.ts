@@ -120,9 +120,20 @@ const GROUP_COLOR: Record<string, string> = {
           <div class="dept">
             <button class="dept-row" *ngFor="let d of topDepts()" (click)="go({ tab: 'tickets', preset: { department: d.department } })">
               <span class="d-name">{{ d.department }}</span>
-              <div class="d-track"><span class="d-fill" [style.width.%]="pct(d.linked, d.tickets)"></span></div>
-              <span class="d-num num">{{ d.linked | number }}/{{ d.tickets | number }}</span>
-              <span class="d-pct num">{{ pct(d.linked, d.tickets) }}%</span>
+              <div class="d-bars">
+                <div class="d-line" [title]="pct(d.linked, d.tickets) + '% ของตั๋วอนุมัติแล้วเปิดการ์ด Jira แล้ว'">
+                  <span class="d-lab">เปิดการ์ด</span>
+                  <div class="d-track"><span class="d-fill" [style.width.%]="pct(d.linked, d.tickets)"></span></div>
+                  <span class="d-num num">{{ d.linked | number }}/{{ d.tickets | number }}</span>
+                  <span class="d-pct num">{{ pct(d.linked, d.tickets) }}%</span>
+                </div>
+                <div class="d-line" [title]="'สำเร็จ = การ์ด Jira ที่เชื่อมทุกใบเป็น done/closed (' + (d.done | number) + ' จาก ' + (d.tickets | number) + ' ตั๋ว)'">
+                  <span class="d-lab">สำเร็จ</span>
+                  <div class="d-track"><span class="d-fill done" [style.width.%]="pct(d.done, d.tickets)"></span></div>
+                  <span class="d-num num">{{ d.done | number }}/{{ d.tickets | number }}</span>
+                  <span class="d-pct num done">{{ pct(d.done, d.tickets) }}%</span>
+                </div>
+              </div>
             </button>
           </div>
         </section>
@@ -189,22 +200,28 @@ const GROUP_COLOR: Record<string, string> = {
       .ag-who { grid-area: who; font-size: 11.5px; color: var(--muted-2); }
       .empty { color: var(--muted-2); font-size: 13.5px; padding: 12px 0; }
 
-      /* D. department */
+      /* D. department — แถวละ 2 หลอด: เปิดการ์ดแล้ว + สำเร็จ (done/closed) */
       .dept { display: flex; flex-direction: column; gap: 4px; }
-      .dept-row { display: grid; grid-template-columns: 1fr 120px 78px 46px; align-items: center; gap: 12px; padding: 8px 6px; background: transparent; border: none; border-bottom: 1px solid color-mix(in srgb, var(--line) 55%, transparent); cursor: pointer; font-family: var(--font-body); text-align: left; }
+      .dept-row { display: grid; grid-template-columns: 140px 1fr; align-items: center; gap: 12px; padding: 9px 6px; background: transparent; border: none; border-bottom: 1px solid color-mix(in srgb, var(--line) 55%, transparent); cursor: pointer; font-family: var(--font-body); text-align: left; }
       .dept-row:hover { background: var(--panel-2); }
       .dept-row:focus-visible { outline: 2px solid var(--brand); }
       .d-name { font-size: 13.5px; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .d-bars { display: flex; flex-direction: column; gap: 5px; }
+      .d-line { display: grid; grid-template-columns: 58px 1fr 74px 42px; align-items: center; gap: 9px; }
+      .d-lab { font-size: 10.5px; color: var(--muted-2); white-space: nowrap; }
       .d-track { height: 8px; background: var(--line); border-radius: 99px; overflow: hidden; }
       .d-fill { display: block; height: 100%; background: color-mix(in srgb, var(--text) 45%, var(--line)); }
+      .d-fill.done { background: color-mix(in srgb, var(--st-active) 78%, var(--line)); }
       .d-num { font-size: 12px; color: var(--muted); text-align: right; }
       .d-pct { font-size: 12.5px; color: var(--text); text-align: right; font-weight: 700; }
+      .d-pct.done { color: var(--st-active); }
 
       @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
       @media (max-width: 620px) {
         .masthead, .page { padding-left: 16px; padding-right: 16px; }
         .tiles { grid-template-columns: repeat(2, 1fr); }
         .fn-row { grid-template-columns: 96px 1fr 34px; }
+        .dept-row { grid-template-columns: 1fr; gap: 6px; }
       }
     `,
   ],

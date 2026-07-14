@@ -98,6 +98,15 @@ export interface WeeklyReport {
 }
 
 // ── Tickets (ticket ↔ Jira tracking) ─────────────────────────────────
+/** การติดตามเมล UAT/smoke (v_uat_followup) — optional เพื่อ degrade เงียบถ้า backend ยังไม่ส่ง */
+export interface UatFollowup {
+  stage: 'uat' | 'smoke test';
+  sentAt: string | null;
+  deadlineDate: string | null;
+  daysWaiting: number;
+  overdue: boolean;
+}
+
 export interface TicketRow {
   ticketNumber: string;
   company: string | null;
@@ -115,6 +124,7 @@ export interface TicketRow {
   jiraAssignee: string | null;
   jiraCount: number;
   flagMismatch: boolean;
+  followup?: UatFollowup | null;
 }
 
 export interface TicketListResponse {
@@ -177,6 +187,7 @@ export interface TicketFull {
 export interface TicketDetail {
   ticket: TicketFull;
   issues: LinkedIssue[];
+  followup?: UatFollowup | null;
 }
 
 export interface TicketQuery {
@@ -221,6 +232,8 @@ export interface OverviewDept {
   department: string;
   tickets: number;
   linked: number;
+  /** ตั๋วที่การ์ด Jira ที่เชื่อมทุกใบเป็น done/closed */
+  done: number;
 }
 export interface Overview {
   coverage: OverviewCoverage;
@@ -249,6 +262,7 @@ export interface WorkloadCard {
   waitingLabel: string | null;
   daysInStage: number | null;
   ticketNumbers: string[];
+  followup?: UatFollowup | null;
 }
 
 export interface WorkloadGroup {

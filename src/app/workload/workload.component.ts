@@ -5,6 +5,7 @@ import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { TicketFilters, WorkloadGroup } from '../models';
 import { TicketsService } from '../tickets.service';
+import { FollowupBadgeComponent } from '../tickets/followup-badge.component';
 import { StageStripComponent } from '../tickets/stage-strip.component';
 
 interface AppliedChip {
@@ -17,7 +18,7 @@ const JIRA_BASE = 'https://sittidate-lueangon.atlassian.net/browse/';
 @Component({
   selector: 'app-workload',
   standalone: true,
-  imports: [CommonModule, FormsModule, StageStripComponent],
+  imports: [CommonModule, FormsModule, StageStripComponent, FollowupBadgeComponent],
   template: `
     <header class="masthead">
       <div>
@@ -82,6 +83,7 @@ const JIRA_BASE = 'https://sittidate-lueangon.atlassian.net/browse/';
             </div>
             <div class="c-summary" [title]="c.summary">{{ c.summary }}</div>
             <app-stage-strip [status]="c.status" [days]="c.daysInStage"></app-stage-strip>
+            <app-followup-badge class="fb-slot" [followup]="c.followup" [status]="c.status"></app-followup-badge>
             <div class="c-tickets" *ngIf="c.ticketNumbers.length">
               <span class="tk mono" *ngFor="let t of c.ticketNumbers">{{ t }}</span>
             </div>
@@ -134,6 +136,9 @@ const JIRA_BASE = 'https://sittidate-lueangon.atlassian.net/browse/';
       .c-top { display: flex; align-items: center; gap: 8px; }
       .c-key { font-weight: 700; font-size: 13px; color: var(--brand); text-decoration: none; }
       .c-key:hover { text-decoration: underline; }
+      /* badge ติดตามเมล — ซ่อน host ตอนไม่มี badge กัน gap ของ .card กินที่เปล่า */
+      .fb-slot { align-self: flex-start; }
+      .fb-slot:empty { display: none; }
       .c-summary { font-size: 14px; line-height: 1.55; color: var(--text); overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
       .c-tickets { display: flex; flex-wrap: wrap; gap: 5px; }
       .c-tickets.none { font-size: 12px; color: var(--muted-2); }
