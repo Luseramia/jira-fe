@@ -273,3 +273,47 @@ export interface WorkloadGroup {
   byStatus: Record<string, number>;
   cards: WorkloadCard[];
 }
+
+// ── UAT verdict (เมลผลทดสอบจาก MOTO.OS → ขยับการ์ด Jira) ─────────────
+export type UatVerdictState =
+  | 'new'
+  | 'pending_approval'
+  | 'transitioned'
+  | 'skipped'
+  | 'needs_review'
+  | 'dismissed'
+  | 'superseded';
+
+export interface UatVerdict {
+  id: number;
+  ticketNo: string;
+  verdict: 'pass' | 'fail';
+  actorName: string | null;
+  subject: string | null;
+  receivedAt: string;
+  state: UatVerdictState;
+  jiraKey: string | null;
+  jiraUrl: string | null;
+  jiraSummary: string | null;
+  /** สถานะตอน BE ประมวลผลล่าสุด */
+  jiraStatus: string | null;
+  /** สถานะสดจาก Jira ตอนเปิดหน้า (null = ดึงไม่ได้) */
+  liveStatus: string | null;
+  targetStatus: string | null;
+  reason: string | null;
+  attempts: number;
+  lastError: string | null;
+  transitionedAt: string | null;
+  transitionedBy: string | null;
+  updatedAt: string;
+}
+
+export interface UatVerdictList {
+  pending: UatVerdict[];
+  review: UatVerdict[];
+  recent: UatVerdict[];
+  queued: number;
+  autoFail: boolean;
+  jiraConfigured: boolean;
+  liveError: string | null;
+}

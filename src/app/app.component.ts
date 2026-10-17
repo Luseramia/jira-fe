@@ -4,20 +4,30 @@ import { TicketPreset } from './models';
 import { NavEvent, OverviewComponent } from './overview/overview.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { TicketBoardComponent } from './tickets/ticket-board.component';
+import { UatVerdictsComponent } from './uat/uat-verdicts.component';
 import { WeeklyComponent } from './weekly/weekly.component';
 import { WorkloadComponent } from './workload/workload.component';
 
-type Tab = 'overview' | 'due' | 'weekly' | 'tickets' | 'workload';
+type Tab = 'overview' | 'due' | 'weekly' | 'tickets' | 'workload' | 'uat';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, OverviewComponent, DashboardComponent, WeeklyComponent, TicketBoardComponent, WorkloadComponent],
+  imports: [
+    CommonModule,
+    OverviewComponent,
+    DashboardComponent,
+    WeeklyComponent,
+    TicketBoardComponent,
+    WorkloadComponent,
+    UatVerdictsComponent,
+  ],
   template: `
     <nav class="tabs">
       <button class="tab" [class.active]="tab === 'overview'" (click)="go('overview')">ภาพรวม</button>
       <button class="tab" [class.active]="tab === 'tickets'" (click)="go('tickets')">Tickets</button>
       <button class="tab" [class.active]="tab === 'workload'" (click)="go('workload')">Workload</button>
+      <button class="tab" [class.active]="tab === 'uat'" (click)="go('uat')">UAT อนุมัติ</button>
       <button class="tab" [class.active]="tab === 'due'" (click)="go('due')">Due Board</button>
       <button class="tab" [class.active]="tab === 'weekly'" (click)="go('weekly')">
         Weekly <span class="badge">อังคาร</span>
@@ -29,6 +39,7 @@ type Tab = 'overview' | 'due' | 'weekly' | 'tickets' | 'workload';
     <app-weekly *ngIf="tab === 'weekly'"></app-weekly>
     <app-ticket-board *ngIf="tab === 'tickets'" [preset]="ticketPreset"></app-ticket-board>
     <app-workload *ngIf="tab === 'workload'"></app-workload>
+    <app-uat-verdicts *ngIf="tab === 'uat'"></app-uat-verdicts>
   `,
   styles: [
     `
