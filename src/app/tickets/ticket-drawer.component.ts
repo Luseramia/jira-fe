@@ -15,7 +15,7 @@ import { stageMeta } from './status-chip';
     <div class="scrim" [class.show]="!!ticketNumber" (click)="closed.emit()"></div>
 
     <aside class="drawer" [class.show]="!!ticketNumber" *ngIf="ticketNumber">
-      <header class="head">
+      <header class="head fx-holo">
         <div class="head-top">
           <span class="key mono">{{ ticketNumber }}</span>
           <button class="x" type="button" (click)="closed.emit()" aria-label="ปิดหน้าต่าง">✕</button>
@@ -59,7 +59,7 @@ import { stageMeta } from './status-chip';
               ยังไม่พบการ์ด Jira สำหรับตั๋วนี้
             </div>
 
-            <article class="jcard" *ngFor="let iss of detail.issues">
+            <article class="jcard fx-lift" *ngFor="let iss of detail.issues">
               <div class="jhead">
                 <a class="jkey mono" [href]="iss.url" target="_blank" rel="noopener">{{ iss.jiraKey }} ↗</a>
                 <span class="mby" [class.manual]="iss.matchedBy === 'manual'">
@@ -108,16 +108,16 @@ import { stageMeta } from './status-chip';
   `,
   styles: [
     `
-      .scrim { position: fixed; inset: 0; background: rgba(5, 8, 14, 0.55); backdrop-filter: blur(2px); opacity: 0; pointer-events: none; transition: opacity 0.2s ease; z-index: 40; }
+      .scrim { position: fixed; inset: 0; background: rgba(46, 26, 71, .3); backdrop-filter: blur(3px); opacity: 0; pointer-events: none; transition: opacity 0.2s ease; z-index: 40; }
       .scrim.show { opacity: 1; pointer-events: auto; }
-      .drawer { position: fixed; top: 0; right: 0; height: 100dvh; width: min(580px, 100vw); background: var(--panel); border-left: 1px solid var(--line); transform: translateX(100%); transition: transform 0.24s cubic-bezier(0.22, 1, 0.36, 1); z-index: 50; display: flex; flex-direction: column; }
+      .drawer { position: fixed; top: 0; right: 0; height: 100dvh; width: min(580px, 100vw); background: rgba(255,255,255,.94); border-left: 1px solid #e9d5ff; box-shadow: -22px 0 60px -30px rgba(124,58,237,.35); backdrop-filter: blur(18px); transform: translateX(100%); transition: transform 0.24s cubic-bezier(0.22, 1, 0.36, 1); z-index: 50; display: flex; flex-direction: column; }
       .drawer.show { transform: translateX(0); }
       @media (prefers-reduced-motion: reduce) { .drawer, .scrim { transition: none; } }
 
-      .head { padding: 20px 24px 16px; border-bottom: 1px solid var(--line); }
+      .head { padding: 20px 24px 16px; border-bottom: 1px solid var(--line); background: linear-gradient(120deg, #fdf2f8, #f5f3ff 65%, #eff6ff); }
       .head-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
       .key { font-weight: 700; font-size: 15px; color: var(--text); }
-      .x { background: transparent; border: 1px solid var(--line); color: var(--muted); width: 32px; height: 32px; border-radius: 8px; cursor: pointer; font-size: 14px; }
+      .x { background: rgba(255,255,255,.85); border: 1px solid var(--line); color: var(--muted); width: 36px; height: 36px; border-radius: 50%; cursor: pointer; font-size: 14px; }
       .x:hover { color: var(--text); border-color: var(--muted); }
       .x:focus-visible { outline: 2px solid var(--brand); }
       .title { margin: 0; font-family: var(--font-display); font-weight: 600; font-size: 18px; line-height: 1.45; }
@@ -133,7 +133,7 @@ import { stageMeta } from './status-chip';
       .desc { margin: 16px 0 0; padding: 13px 15px; background: var(--panel-2); border: 1px solid var(--line); border-radius: var(--radius-sm); font-size: 14.5px; line-height: 1.75; white-space: pre-wrap; word-break: break-word; }
 
       .empty-card { color: var(--muted-2); font-size: 14.5px; padding: 10px 0; }
-      .jcard { background: var(--panel-2); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 15px 16px; margin-bottom: 13px; }
+      .jcard { background: #fff; border: 1px solid var(--line); border-radius: 18px; padding: 15px 16px; margin-bottom: 13px; box-shadow: 0 12px 28px -24px rgba(124,58,237,.35); }
       .jhead { display: flex; align-items: center; gap: 9px; margin-bottom: 14px; }
       .jkey { font-weight: 700; font-size: 14px; color: var(--brand); text-decoration: none; }
       .jkey:hover { text-decoration: underline; }
@@ -162,7 +162,7 @@ import { stageMeta } from './status-chip';
       .linker { display: flex; gap: 9px; margin-top: 14px; }
       .linker input { flex: 1; background: var(--panel); border: 1px solid var(--line); color: var(--text); border-radius: var(--radius-sm); padding: 9px 11px; font-size: 14px; font-family: var(--font-mono); }
       .linker input:focus { outline: 2px solid color-mix(in srgb, var(--brand) 55%, transparent); border-color: var(--brand); }
-      .linker button { background: color-mix(in srgb, var(--brand) 20%, var(--panel)); border: 1px solid var(--brand); color: var(--text); border-radius: var(--radius-sm); padding: 9px 18px; font-size: 14px; cursor: pointer; font-family: var(--font-body); }
+      .linker button { background: linear-gradient(120deg, #7c3aed, #db2777); border: 1px solid transparent; color: #fff; border-radius: var(--radius-sm); padding: 9px 18px; font-size: 14px; cursor: pointer; font-family: var(--font-body); }
       .linker button:disabled { opacity: 0.4; cursor: not-allowed; }
       .link-err { color: var(--st-rework); font-size: 13px; margin-top: 9px; }
 

@@ -17,8 +17,7 @@ import { UatVerdictsService } from '../uat-verdicts.service';
   template: `
     <header class="masthead">
       <div>
-        <h1>UAT อนุมัติ</h1>
-        <p class="sub">ผลทดสอบจากเมล MOTO.OS · ผ่าน = กดย้ายไป READY TO DEPLOY · ไม่ผ่าน = ย้ายเป็น UAT Fail อัตโนมัติ</p>
+        <h1 class="fx-text">UAT </h1>
       </div>
       <div class="head-actions">
         <span class="queued" *ngIf="data?.queued">รอประมวลผล <b class="num">{{ data?.queued }}</b></span>
@@ -55,7 +54,7 @@ import { UatVerdictsService } from '../uat-verdicts.service';
           </div>
           <div class="empty" *ngIf="!data.pending.length">ไม่มีการ์ดรออนุมัติ</div>
           <div class="cards">
-            <article class="card" *ngFor="let v of data.pending">
+            <article class="card fx-lift" *ngFor="let v of data.pending">
               <ng-container *ngTemplateOutlet="cardHead; context: { $implicit: v }"></ng-container>
               <div class="move">
                 <span class="st" [style.--c]="color(v.liveStatus ?? v.jiraStatus)">{{ v.liveStatus ?? v.jiraStatus ?? '—' }}</span>
@@ -67,7 +66,7 @@ import { UatVerdictsService } from '../uat-verdicts.service';
                 การ์ดไม่ได้อยู่ UAT แล้ว — กด "ย้าย" ไม่ได้ ลอง "ตรวจใหม่"
               </div>
               <div class="actions">
-                <button class="btn primary" (click)="approve(v)" [disabled]="busyId === v.id || !canApprove(v)">
+                <button class="btn primary fx-shine" (click)="approve(v)" [disabled]="busyId === v.id || !canApprove(v)">
                   {{ busyId === v.id ? 'กำลังย้าย…' : 'ย้ายไป ' + v.targetStatus }}
                 </button>
                 <button class="btn ghost" (click)="requeue(v)" [disabled]="busyId === v.id" *ngIf="!canApprove(v)">ตรวจใหม่</button>
@@ -85,7 +84,7 @@ import { UatVerdictsService } from '../uat-verdicts.service';
             <span class="g-sub">ระบบตัดสินเองไม่ได้ — ไม่ได้แตะ Jira</span>
           </div>
           <div class="cards">
-            <article class="card" *ngFor="let v of data.review">
+            <article class="card fx-lift" *ngFor="let v of data.review">
               <ng-container *ngTemplateOutlet="cardHead; context: { $implicit: v }"></ng-container>
               <div class="move" *ngIf="v.jiraKey">
                 <span class="lbl">Jira ตอนนี้</span>
@@ -94,7 +93,7 @@ import { UatVerdictsService } from '../uat-verdicts.service';
               <div class="reason strong">{{ v.reason || 'ไม่ทราบเหตุผล' }}</div>
               <div class="link-row" *ngIf="linkingId === v.id">
                 <input type="text" class="mono" placeholder="SE-2157" [(ngModel)]="linkKey" (keyup.enter)="requeue(v, linkKey)" />
-                <button class="btn primary" (click)="requeue(v, linkKey)" [disabled]="!linkKey.trim() || busyId === v.id">ผูก + ตรวจ</button>
+                <button class="btn primary fx-shine" (click)="requeue(v, linkKey)" [disabled]="!linkKey.trim() || busyId === v.id">ผูก + ตรวจ</button>
                 <button class="btn ghost" (click)="linkingId = null">ยกเลิก</button>
               </div>
               <div class="actions" *ngIf="linkingId !== v.id">
@@ -146,31 +145,31 @@ import { UatVerdictsService } from '../uat-verdicts.service';
   `,
   styles: [
     `
-      .masthead { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 20px; max-width: 1320px; margin: 0 auto; padding: 30px 28px 16px; }
-      h1 { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: 24px; }
-      .sub { margin: 4px 0 0; color: var(--muted); font-size: 14px; }
+      .masthead { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 20px; max-width: 1256px; margin: 0 auto; padding: 34px 0 24px; }
+      h1 { margin: 0; font: 700 clamp(36px, 4vw, 50px)/1.2 var(--font-display); color: #a21caf; background: linear-gradient(90deg, #db2777, #7c3aed, #0284c7, #db2777); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+      .sub { margin: 5px 0 0; color: var(--muted); font-size: 15px; }
       .head-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
       .queued { font-size: 13px; color: var(--muted); }
       .queued b { color: var(--st-user); font-size: 16px; margin-left: 4px; }
 
-      .page { max-width: 1320px; margin: 0 auto; padding: 10px 28px 80px; }
+      .page { max-width: 1256px; margin: 0 auto; padding: 0 0 80px; }
       .state { text-align: center; color: var(--muted); padding: 54px 16px; font-size: 15px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
       .state.err { color: var(--st-rework); }
 
-      .banner { display: flex; align-items: center; gap: 10px; border: 1px solid var(--line); background: var(--panel); border-radius: var(--radius-sm); padding: 10px 14px; margin-bottom: 12px; font-size: 14px; color: var(--muted); }
+      .banner { display: flex; align-items: center; gap: 10px; border: 1px solid var(--line); background: rgba(255,255,255,.8); border-radius: 16px; padding: 12px 16px; margin-bottom: 12px; font-size: 14px; color: var(--muted); }
       .banner.warn { color: var(--st-user); border-color: color-mix(in srgb, var(--st-user) 40%, var(--line)); }
       .banner.err { color: var(--st-rework); border-color: color-mix(in srgb, var(--st-rework) 45%, var(--line)); }
       .banner .x { margin-left: auto; background: transparent; border: none; color: inherit; cursor: pointer; font-size: 13px; }
 
-      .btn { background: var(--panel-2); border: 1px solid var(--line); color: var(--text); border-radius: var(--radius-sm); padding: 7px 14px; font-size: 13.5px; cursor: pointer; font-family: var(--font-body); white-space: nowrap; }
+      .btn { background: rgba(255,255,255,.85); border: 1.5px solid var(--line); color: #4c1d95; border-radius: 16px; padding: 9px 16px; font-size: 13.5px; cursor: pointer; font-family: var(--font-body); font-weight: 600; white-space: nowrap; }
       .btn:hover:not(:disabled) { border-color: var(--brand); }
       .btn:disabled { opacity: 0.45; cursor: not-allowed; }
-      .btn.primary { background: color-mix(in srgb, var(--brand) 22%, var(--panel-2)); border-color: color-mix(in srgb, var(--brand) 55%, var(--line)); color: var(--text); font-weight: 600; }
+      .btn.primary { background: linear-gradient(120deg, #7c3aed, #c026d3 60%, #db2777); border-color: transparent; color: #fff; box-shadow: 0 10px 22px -10px rgba(192,38,211,.6); }
       .btn.ghost { background: transparent; }
 
-      .group { border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); padding: 18px 20px; margin-bottom: 16px; }
+      .group { border: 1px solid rgba(255,255,255,.95); border-radius: 30px; background: rgba(255,255,255,.58); box-shadow: 0 24px 60px -32px rgba(124,58,237,.4); backdrop-filter: blur(16px); padding: 22px; margin-bottom: 18px; }
       .g-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
-      .g-head h2 { margin: 0; font-family: var(--font-display); font-size: 17px; font-weight: 600; }
+      .g-head h2 { margin: 0; font-family: var(--font-display); font-size: 20px; font-weight: 700; }
       .g-sub { font-size: 12.5px; color: var(--muted); }
       .count { font-size: 13px; font-weight: 700; color: var(--st-user); background: color-mix(in srgb, var(--st-user) 14%, transparent); border-radius: 99px; padding: 0 9px; }
       .count.review { color: var(--st-rework); background: color-mix(in srgb, var(--st-rework) 14%, transparent); }
@@ -178,7 +177,7 @@ import { UatVerdictsService } from '../uat-verdicts.service';
       .toggle { margin-left: auto; display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--muted); cursor: pointer; }
 
       .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 12px; }
-      .card { border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--panel-2); padding: 13px 14px; display: flex; flex-direction: column; gap: 9px; }
+      .card { border: 1px solid #eadcff; border-radius: 20px; background: rgba(255,255,255,.86); padding: 16px; display: flex; flex-direction: column; gap: 10px; box-shadow: 0 12px 28px -22px rgba(124,58,237,.42); }
       .c-top { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
       .c-key { font-weight: 700; font-size: 13px; color: var(--brand); text-decoration: none; }
       .c-key:hover { text-decoration: underline; }
@@ -210,8 +209,11 @@ import { UatVerdictsService } from '../uat-verdicts.service';
       .outcome { color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
       .outcome.transitioned { color: var(--text); }
 
+      @media (max-width: 1320px) {
+        .masthead, .page { margin-left: 28px; margin-right: 28px; }
+      }
       @media (max-width: 720px) {
-        .masthead, .page { padding-left: 16px; padding-right: 16px; }
+        .masthead, .page { margin-left: 16px; margin-right: 16px; }
         .cards { grid-template-columns: 1fr; }
         .log-row { grid-template-columns: 90px 1fr auto; }
         .log-row .tk, .log-row .vd { display: none; }

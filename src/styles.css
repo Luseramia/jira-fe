@@ -1,44 +1,34 @@
-/* =====================================================================
-   Jira Due Board — design tokens
-   ทิศทาง: "ops console" จอเข้มแบบแผงควบคุม สีคือข้อมูล (urgency)
-   ===================================================================== */
+/* Shared palette for the UAT and mail tracker. */
 :root {
-  --ink:      #0d1320;
-  --panel:    #151d2e;
-  --panel-2:  #1b2438;
-  --line:     #283449;
-  --text:     #e7edf7;
-  --muted:    #8094b3;
-  --muted-2:  #5d6f8f;
+  --ink:      #f8f4ff;
+  --panel:    rgba(255, 255, 255, .78);
+  --panel-2:  #f5efff;
+  --line:     #e7d9f8;
+  --text:     #2e1a47;
+  --muted:    #5b4775;
+  --muted-2:  #796b91;
 
-  /* urgency scale — ความเร่งด่วนคือสาระของหน้านี้ */
-  --overdue:   #ff5d73;
-  --today:     #ff9f45;
-  --soon:      #ffd23f;
-  --upcoming:  #4cc9b0;
+  --overdue:   #be123c;
+  --today:     #b45309;
+  --soon:      #a16207;
+  --upcoming:  #087f64;
+  --brand:     #6d28d9;
 
-  --brand:    #7aa2ff;   /* accent — interactive only (links/buttons/focus), never a status */
+  --st-active:       #087f64;
+  --st-tester:       #0369a1;
+  --st-user:         #a5520b;
+  --st-senior:       #6d28d9;
+  --st-rework:       #be123c;
+  --st-neutral:      #667085;
 
-  /* ── semantic status contract (ball-ownership §14) — 6 สี map 1:1 กับกลุ่ม ──
-     ใช้เฉพาะสื่อ "สเตจ/ลูกอยู่ที่ใคร" เท่านั้น ห้ามใช้ตกแต่งที่อื่น
-     waiting_user สว่างสุด (จุดเจ็บของทีม), neutral/done จมสุด               */
-  --st-active:       #57c98a;   /* dev ทำอยู่            */
-  --st-tester:       #2fc4c4;   /* รอ tester            */
-  --st-user:         #ffb43d;   /* รอ user ← เด่นสุด     */
-  --st-senior:       #b18cf0;   /* รอ senior           */
-  --st-rework:       #f0736f;   /* แก้กลับ              */
-  --st-neutral:      #8394b0;   /* done / in-transit / อื่น ๆ (จมสุด) */
+  --radius:   24px;
+  --radius-sm: 16px;
+  --radius-xs: 9px;
 
-  --radius:   14px;
-  --radius-sm: 9px;
-  --radius-xs: 6px;
-
-  /* spacing scale (4px base) */
   --sp-1: 4px; --sp-2: 8px; --sp-3: 12px; --sp-4: 16px; --sp-5: 24px; --sp-6: 32px;
 
-  --font-display: 'Space Grotesk', system-ui, sans-serif;
-  /* Thai-first body: IBM Plex Sans Thai Looped — ห่วงปลายอักษรช่วยแยก ก/ถ/ภ ตอนสแกนเร็ว */
-  --font-body:    'IBM Plex Sans Thai Looped', 'Noto Sans Thai', system-ui, sans-serif;
+  --font-display: 'Mali', 'Anuphan', sans-serif;
+  --font-body:    'Anuphan', system-ui, sans-serif;
   --font-mono:    'JetBrains Mono', ui-monospace, monospace;
 }
 
@@ -48,26 +38,42 @@ html, body {
   margin: 0;
   padding: 0;
   background:
-    radial-gradient(1200px 600px at 80% -10%, rgba(122, 162, 255, 0.08), transparent 60%),
-    var(--ink);
+    radial-gradient(580px 400px at 4% 14%, rgba(249, 168, 212, .32), transparent 75%),
+    radial-gradient(620px 490px at 94% 10%, rgba(196, 181, 253, .44), transparent 76%),
+    radial-gradient(650px 430px at 84% 70%, rgba(165, 243, 252, .25), transparent 78%),
+    linear-gradient(200deg, #fdf2f8 0%, #f5f3ff 38%, #eef4ff 72%, #fdf4ff 100%);
   color: var(--text);
   font-family: var(--font-body);
   font-size: 15px;           /* Thai body ≥ 15px */
-  line-height: 1.75;         /* วรรณยุกต์/สระไทยต้องการช่องหายใจ */
+  line-height: 1.55;
   -webkit-font-smoothing: antialiased;
 }
 
-/* ตัวเลข/รหัสในตาราง: tabular + ชิดขวา อ่านเทียบง่าย */
+body { min-height: 100vh; }
+
 .mono, .num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
 
-::selection { background: rgba(122, 162, 255, 0.3); }
+::selection { background: rgba(196, 181, 253, .6); }
 
-/* scrollbar ให้เข้ากับธีมเข้ม */
+/* Subtle motion shared by the UAT, mail tracker, and ticket drawer. */
+@keyframes holo-shift { from { background-position: 0% 50%; } to { background-position: 300% 50%; } }
+@keyframes holo-sweep { 0% { transform: translateX(-160%) skewX(-20deg); } 55%, 100% { transform: translateX(360%) skewX(-20deg); } }
+@keyframes holo-ping { 0% { box-shadow: 0 0 0 0 rgba(225, 29, 72, .5); } 80%, 100% { box-shadow: 0 0 0 9px rgba(225, 29, 72, 0); } }
+.fx-holo { background-size: 300% 100% !important; animation: holo-shift 7s linear infinite; }
+.fx-text { background-size: 300% 100% !important; animation: holo-shift 6s linear infinite; }
+.fx-shine { position: relative; overflow: hidden; isolation: isolate; }
+.fx-shine::after { content: ''; position: absolute; inset: 0 auto 0 0; width: 35%; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .58), transparent); pointer-events: none; animation: holo-sweep 3.4s ease-in-out infinite; }
+.fx-shine:disabled::after { display: none; }
+.fx-lift { transition: transform .28s cubic-bezier(.2,.8,.2,1), box-shadow .28s; }
+.fx-lift:hover { transform: translateY(-3px); box-shadow: 0 26px 60px -22px rgba(124, 58, 237, .4); }
+.fx-ping { animation: holo-ping 1.8s ease-out infinite; }
+
 ::-webkit-scrollbar { width: 10px; height: 10px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--line); border-radius: 99px; }
-::-webkit-scrollbar-thumb:hover { background: var(--muted-2); }
+::-webkit-scrollbar-thumb:hover { background: #c4b5fd; }
 
 @media (prefers-reduced-motion: reduce) {
   * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+  .fx-shine::after { display: none; }
 }

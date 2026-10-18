@@ -2,6 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import {
+  MailSummary,
   Overview,
   TicketDetail,
   TicketFilters,
@@ -27,6 +28,10 @@ export class TicketsService {
       }
     }
     return this.http.get<TicketListResponse>(`${API}/tickets`, { params });
+  }
+
+  mailSummary(): Observable<MailSummary> {
+    return this.http.get<MailSummary>(`${API}/tickets/mail-summary`);
   }
 
   filters(): Observable<TicketFilters> {

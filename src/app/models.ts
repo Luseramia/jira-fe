@@ -134,6 +134,12 @@ export interface TicketListResponse {
   limit: number;
 }
 
+export interface MailSummary {
+  waiting: number;
+  overdue: number;
+  longestDays: number;
+}
+
 export interface TicketFilters {
   departments: string[];
   requesters: string[];
