@@ -197,6 +197,7 @@ export interface TicketQuery {
   sheetStatus?: string;
   hasJira?: boolean;
   mismatch?: boolean;
+  mailWaiting?: boolean;
   year?: number;
   q?: string;
   page?: number;
