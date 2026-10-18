@@ -51,6 +51,14 @@ html, body {
 
 body { min-height: 100vh; }
 
+html, body {
+  cursor: url('./assets/sparkle-cursor.svg') 16 16, auto;
+}
+
+body :is(button:not(:disabled), a, label, [role='button'], [tabindex='0'], tbody tr) {
+  cursor: url('./assets/sparkle-cursor.svg') 16 16, pointer !important;
+}
+
 .mono, .num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
 
 ::selection { background: rgba(196, 181, 253, .6); }
