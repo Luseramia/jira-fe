@@ -324,3 +324,102 @@ export interface UatVerdictList {
   jiraConfigured: boolean;
   liveError: string | null;
 }
+
+// ── Merge เข้า main (PR erp-backend / erp-frontend ↔ การ์ด SE) ─────────
+// mirror ของ jira-be src/main-merges/main-merges.service.ts
+export type MergePrState = 'merged' | 'open' | 'closed';
+export type MergeMatchedBy = 'branch' | 'cr' | 'ticket' | 'title';
+export type CardMergeState = 'merged' | 'partial' | 'open' | 'none';
+export type MergeFlag = 'merged_not_moved' | 'no_pr' | 'open_after_deploy';
+export type UnmatchedReason = 'cr_not_in_sheet' | 'cr_no_se' | 'ticket_no_se' | 'no_ref';
+
+export interface MergePr {
+  repo: string;
+  repoLabel: string; // BE | FE
+  number: number;
+  title: string | null;
+  branch: string;
+  state: MergePrState;
+  mergedAt: string | null;
+  updatedAt: string | null;
+  url: string | null;
+  author: string | null;
+  matchedBy: MergeMatchedBy | null;
+  /** CR / ticket ที่ใช้ผูก (หรือที่หาไม่เจอ) */
+  via: string | null;
+}
+
+export interface UnmatchedPr extends MergePr {
+  reason: UnmatchedReason;
+}
+
+export interface RepoMerge {
+  repo: string;
+  label: string;
+  state: MergePrState;
+  latest: MergePr;
+  lastMergedAt: string | null;
+  prs: MergePr[]; // ใหม่ → เก่า
+}
+
+export interface MergeCard {
+  key: string;
+  url: string;
+  summary: string | null;
+  assignee: string | null;
+  status: string | null;
+  statusSource: 'live' | 'db' | null;
+  state: CardMergeState;
+  repos: RepoMerge[];
+  lastMergedAt: string | null;
+  lastActivityAt: string | null;
+  flag: MergeFlag | null;
+  flagText: string | null;
+}
+
+export interface MergeSync {
+  prSyncedAt: string | null;
+  prCount: number;
+  repos: string[];
+  sheetSyncedAt: string | null;
+  sheetRows: number;
+}
+
+export type MergeGroup = 'attn' | 'waiting' | 'merged' | 'unmatched';
+
+/** จำนวนทั้งช่วงวัน (ไม่ขึ้นกับคำค้นหา / หน้า) */
+export interface MergeTotals {
+  attn: number;
+  waiting: number;
+  merged: number;
+  unmatched: number; // รวมที่ไม่มีเลขงาน
+  unmatchedNoRef: number;
+}
+
+export interface MergeListParams {
+  days: number;
+  group?: MergeGroup; // ไม่ส่ง = BE เลือกกลุ่มแรกที่มีรายการ
+  page: number;
+  limit: number;
+  q?: string;
+  noRef?: boolean;
+  fresh?: boolean; // ปุ่มรีเฟรช: ให้ BE เช็คข้อมูลใหม่จาก DB ก่อนตอบ
+}
+
+/** 1 หน้าของ 1 กลุ่ม — GET /api/main-merges */
+export interface MainMergesPage {
+  days: number;
+  group: MergeGroup;
+  page: number;
+  limit: number;
+  total: number; // แถวของกลุ่มนี้หลังค้นหา
+  totals: MergeTotals;
+  /** จำนวนที่ตรงคำค้นหาในแต่ละกลุ่ม (null = ไม่ได้ค้นหา) */
+  found: MergeTotals | null;
+  cards: MergeCard[]; // group ≠ unmatched
+  unmatched: UnmatchedPr[]; // group = unmatched
+  sync: MergeSync | null;
+  jiraConfigured: boolean;
+  liveError: string | null;
+  notReady: string | null;
+}

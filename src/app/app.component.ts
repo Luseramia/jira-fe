@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, HostListener, NgZone, OnDestroy, ViewChild } from '@angular/core';
 import { MailTrackingComponent } from './mail-tracking/mail-tracking.component';
+import { MainMergesComponent } from './main-merges/main-merges.component';
 import { UatVerdictsComponent } from './uat/uat-verdicts.component';
 
 const holoColors = [
@@ -10,6 +11,12 @@ const holoColors = [
   { tail: 'rgba(254,215,170,.8)', head: '#fde68a', glow: 'rgba(251,191,36,.55)' },
   { tail: 'rgba(167,243,208,.85)', head: '#a5f3fc', glow: 'rgba(45,212,191,.55)' },
 ];
+
+type Tab = 'uat' | 'mail' | 'merge';
+
+/** แท็บจาก URL hash (#uat / #mail / #merge) — ไม่รู้จัก = UAT */
+const tabFromHash = (): Tab =>
+  window.location.hash === '#mail' ? 'mail' : window.location.hash === '#merge' ? 'merge' : 'uat';
 
 type MeteorDecoration = {
   id: number;
@@ -26,7 +33,7 @@ type MeteorDecoration = {
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, MailTrackingComponent, UatVerdictsComponent],
+  imports: [CommonModule, MailTrackingComponent, MainMergesComponent, UatVerdictsComponent],
   template: `
     <div class="app-shell">
       <div #ambience class="holo-ambience" aria-hidden="true">
@@ -54,6 +61,8 @@ type MeteorDecoration = {
                   (click)="open('uat')">UAT อนุมัติ</button>
           <button class="tab" [class.active]="tab === 'mail'" [class.fx-shine]="tab === 'mail'" [attr.aria-current]="tab === 'mail' ? 'page' : null"
                   (click)="open('mail')">Track Mail</button>
+          <button class="tab" [class.active]="tab === 'merge'" [class.fx-shine]="tab === 'merge'" [attr.aria-current]="tab === 'merge' ? 'page' : null"
+                  (click)="open('merge')">Merge เข้า main</button>
         </nav>
 
         <span class="workspace-label">Jira &amp; Mail</span>
@@ -61,6 +70,7 @@ type MeteorDecoration = {
 
       <app-uat-verdicts *ngIf="tab === 'uat'"></app-uat-verdicts>
       <app-mail-tracking *ngIf="tab === 'mail'"></app-mail-tracking>
+      <app-main-merges *ngIf="tab === 'merge'"></app-main-merges>
       <div class="sparkle-trail" aria-hidden="true">
         <span #cursorGlow class="cursor-glow"></span>
         <span *ngFor="let spark of sparks; trackBy: trackSpark" class="pointer-spark"
@@ -140,7 +150,7 @@ type MeteorDecoration = {
       .tab:focus-visible { outline: 2px solid #a78bfa; outline-offset: 3px; }
       .workspace-label { justify-self: end; padding: 8px 13px; border: 1px solid #e2d3f5; border-radius: 999px; background: linear-gradient(120deg, #f8f2ff, #eef8ff); color: #5b318f; font-size: 13px; font-weight: 600; white-space: nowrap; }
       @keyframes tab-glint { from { opacity: .45; transform: rotate(-20deg) scale(.7); } to { opacity: 1; transform: rotate(18deg) scale(1.2); } }
-      app-uat-verdicts, app-mail-tracking { display: block; position: relative; z-index: 1; }
+      app-uat-verdicts, app-mail-tracking, app-main-merges { display: block; position: relative; z-index: 1; }
       @media (prefers-reduced-motion: reduce) { .holo-ambience, .sparkle-trail { display: none; } .tab.active::before { animation: none; } }
       @media (max-width: 900px) {
         .topbar { margin: 0 16px; grid-template-columns: 1fr auto; }
@@ -152,7 +162,7 @@ type MeteorDecoration = {
         .topbar { display: flex; flex-direction: column; align-items: stretch; margin: 0 12px; padding: 12px; }
         .brand-copy strong { font-size: 19px; }
         .workspace-label { display: none; }
-        .tabs { width: 100%; }
+        .tabs { width: 100%; overflow-x: auto; }
         .tab { min-width: 0; padding: 0 10px; font-size: 13px; }
       }
     `,
@@ -161,7 +171,7 @@ type MeteorDecoration = {
 export class AppComponent implements AfterViewInit, OnDestroy {
   @ViewChild('ambience') private ambience!: ElementRef<HTMLElement>;
   @ViewChild('cursorGlow') private cursorGlow!: ElementRef<HTMLElement>;
-  tab: 'uat' | 'mail' = window.location.hash === '#mail' ? 'mail' : 'uat';
+  tab: Tab = tabFromHash();
   readonly meteors: MeteorDecoration[] = Array.from({ length: 12 }, (_, id) =>
     this.createMeteor(id, `${-(id * .5).toFixed(1)}s`));
   sparks: Array<{ id: number; x: number; y: number; size: number; color: string; dx: number; dy: number; alternate: number; dot: boolean; large: boolean }> = [];
@@ -278,13 +288,13 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     }, 900);
   }
 
-  open(tab: 'uat' | 'mail'): void {
+  open(tab: Tab): void {
     this.tab = tab;
     window.location.hash = tab;
   }
 
   @HostListener('window:hashchange')
   onHashChange(): void {
-    this.tab = window.location.hash === '#mail' ? 'mail' : 'uat';
+    this.tab = tabFromHash();
   }
 }
